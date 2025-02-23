@@ -1,0 +1,88 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class ExerciseBlackJackDiceGame {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        boolean playAgain = true;
+
+        while (playAgain) {
+            System.out.println("Welcome to Blackjack Dice Game!");
+            int userSum = rollDice(random) + rollDice(random);
+            System.out.println("You start out with a: " + userSum);
+
+            // User's turn
+            boolean userTurn = true;
+            while (userTurn) {
+                System.out.print("Do you want to roll the dice again? (y/n): ");
+                String choice = scanner.next();
+
+                if (choice.equalsIgnoreCase("y")) {
+                    int newRoll = rollDice(random);
+                    userSum += newRoll;
+                    System.out.println("You now have: " + userSum);
+
+                    if (userSum > 21) {
+                        System.out.println("You exceeded 21, Machine wins!");
+                        userTurn = false;
+                    } else if (userSum == 21) {
+                        System.out.println("BlackJack! You win!");
+                        userTurn = false;
+                    }
+                } else {
+                    userTurn = false;
+                }
+            }
+
+            // Machine's turn
+            int machineSum = rollDice(random) + rollDice(random);
+            System.out.println("Machine starts with: " + machineSum);
+
+            boolean machineTurn = true;
+            while (machineTurn && userSum <= 21) {
+                if (machineSum < 16) {
+                    int newRoll = rollDice(random);
+                    machineSum += newRoll;
+                    System.out.println("Machine now has: " + machineSum);
+                } else {
+                    machineTurn = false;
+                }
+            }
+
+            // Compare results
+            if (userSum <= 21) {
+                if (machineSum > 21) {
+                    System.out.println("Machine exceeded 21, You win!");
+                } else if (userSum > machineSum) {
+                    System.out.println("You win!");
+                    System.out.println("You got " + userSum);
+                    System.out.println("Machine got " + machineSum);
+                } else if (userSum < machineSum) {
+                    System.out.println("Machine wins!");
+                    System.out.println("You got " + userSum);
+                    System.out.println("Machine got " + machineSum);
+                } else {
+                    System.out.println("It is a draw");
+                    System.out.println("You got " + userSum);
+                    System.out.println("Machine got " + machineSum);
+                }
+            }
+
+            // Ask if the user wants to play again
+            System.out.print("Do you want to play again? (y/n): ");
+            String playAgainChoice = scanner.next();
+            if (!playAgainChoice.equalsIgnoreCase("y")) {
+                playAgain = false;
+            }
+        }
+
+        System.out.println("Thank you for playing Blackjack Dice Game!");
+        scanner.close();
+    }
+
+    private static int rollDice(Random random) {
+        return random.nextInt(6) + 1;
+    }
+}
